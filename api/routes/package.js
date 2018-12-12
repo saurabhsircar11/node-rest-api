@@ -12,31 +12,40 @@ let config = require('../../config.json');
 router.post('/createPackage', (req, res, next) => {
     let packageName = req.body.packageName;
     let parentDir = path.resolve(process.cwd());
-    try {
-        fse.copySync(parentDir + '/skeleton-proj', parentDir + '/generatedPackage/' + packageName);
-        fileGeneration.fileGenerationEnvironments(parentDir + '/generatedPackage', packageName);
-        let packageJson = fileGeneration.writingPackageJson(parentDir + '/generatedPackage', packageName, req.body.additionalPackages);
-        fs.writeFileSync(parentDir + '/generatedPackage' + '/' + packageName + '/package.json', JSON.stringify(packageJson));
-    } catch (e) {
-        console.log(e);
-        res.status(500).json({message: e})
-        return
-    }
-    execPromise(`zip -r ${packageName}.zip ${packageName}`, parentDir + '/generatedPackage').then((stdout) => {
-        fse.remove(parentDir + '/generatedPackage/' + packageName, err => {
-            if (err) return console.error(err)
+    execPromise('git clone https://github.com/saurabhsircar11/skeleton-proj.git', parentDir).then((stdout) => {
+        try {
 
-            console.log('success!')
-        });
-        res.status(200).json({
-            message: "created"
+            fse.copySync(parentDir + '/skeleton-proj', parentDir + '/generatedPackage/' + packageName);
+            fileGeneration.fileGenerationEnvironments(parentDir + '/generatedPackage', packageName);
+            let packageJson = fileGeneration.writingPackageJson(parentDir + '/generatedPackage', packageName, req.body.additionalPackages);
+            fs.writeFileSync(parentDir + '/generatedPackage' + '/' + packageName + '/package.json', JSON.stringify(packageJson));
+        } catch (e) {
+            console.log(e);
+            res.status(500).json({message: e})
+            return
+        }
+        execPromise(`zip -r ${packageName}.zip ${packageName}`, parentDir + '/generatedPackage').then((stdout) => {
+            fse.remove(parentDir + '/generatedPackage/' + packageName, err => {
+                if (err) return console.error(err)
+
+                console.log('success!')
+            });
+            res.status(200).json({
+                message: "created"
+            })
+        }).catch((error) => {
+            console.log(error);
+            res.status(500).json({
+                message: error
+            })
         })
+
     }).catch((error) => {
-        console.log(error);
         res.status(500).json({
             message: error
         })
     })
+
 });
 
 
