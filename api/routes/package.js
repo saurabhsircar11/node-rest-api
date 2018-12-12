@@ -12,7 +12,18 @@ let config = require('../../config.json');
 router.post('/createPackage', (req, res, next) => {
     let packageName = req.body.packageName;
     let parentDir = path.resolve(process.cwd());
-    execPromise('git clone https://github.com/saurabhsircar11/skeleton-proj.git', parentDir).then((stdout) => {
+    let command='';
+    let cmdPath='';
+    if(fs.existsSync(parentDir+'/skeleton-proj'))
+    {
+        command ='git pull origin master'
+        cmdPath=parentDir+'/skeleton-proj'
+    }
+    else {
+        command='git clone https://github.com/saurabhsircar11/skeleton-proj.git'
+        cmdPath=parentDir
+    }
+    execPromise(command, cmdPath).then((stdout) => {
         try {
 
             fse.copySync(parentDir + '/skeleton-proj', parentDir + '/generatedPackage/' + packageName);
