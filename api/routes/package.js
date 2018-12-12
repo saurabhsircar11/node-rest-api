@@ -13,7 +13,7 @@ router.post('/createPackage', (req, res, next) => {
     let packageName = req.body.packageName;
     let parentDir = path.resolve(process.cwd());
     try {
-        fse.copySync(parentDir + '/skeletonproj', parentDir + '/generatedPackage/' + packageName);
+        fse.copySync(parentDir + '/skeleton-proj', parentDir + '/generatedPackage/' + packageName);
         fileGeneration.fileGenerationEnvironments(parentDir + '/generatedPackage', packageName);
         let packageJson = fileGeneration.writingPackageJson(parentDir + '/generatedPackage', packageName, req.body.additionalPackages);
         fs.writeFileSync(parentDir + '/generatedPackage' + '/' + packageName + '/package.json', JSON.stringify(packageJson));
