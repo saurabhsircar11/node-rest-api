@@ -26,7 +26,12 @@ router.post('/createPackage', (req, res, next) => {
     execPromise(command, cmdPath).then((stdout) => {
         try {
 
+
             fse.copySync(parentDir + '/skeleton-proj', parentDir + '/generatedPackage/' + packageName);
+            fse.remove(parentDir + '/generatedPackage/' + packageName+'/.git', err => {
+                if (err) return console.error(err)
+                console.log('success!')
+            });
             fileGeneration.fileGenerationEnvironments(parentDir + '/generatedPackage', packageName);
             let packageJson = fileGeneration.writingPackageJson(parentDir + '/generatedPackage', packageName, req.body.additionalPackages);
             fs.writeFileSync(parentDir + '/generatedPackage' + '/' + packageName + '/package.json', JSON.stringify(packageJson));
