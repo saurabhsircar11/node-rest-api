@@ -49,7 +49,7 @@ function writingPackageJson(path, projectName, packageList) {
     packageJsonData.scripts.demoBuild = "env-cmd .env.demo react-scripts build";
     packageJsonData.dependencies = Object.assign(packageJsonData.dependencies, requiredDependencies);
     addPromiseMiddleWare(packageJsonData, packageList);
-    addSass(packageJsonData, packageList);
+   // addSass(packageJsonData, packageList);
     addRedux(packageJsonData, packageList);
     addRxJs(packageJsonData, packageList);
     addSaga(packageJsonData, packageList);

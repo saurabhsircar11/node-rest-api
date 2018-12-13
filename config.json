@@ -15,9 +15,6 @@
     "react-transition-group": "^2.5.0"
   },
   "additionalDependencies": {
-    "sass": {
-      "node-sass": "^4.10.0"
-    },
     "firebase": {
       "firebase": "5.6.0"
     },
